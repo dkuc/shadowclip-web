@@ -47,7 +47,7 @@ function Table() {
       setFilteredData(filteredData.sort(compareValues(sortedValue, 'desc')));
     }
 
-    const test = () => {
+    const flipSort = () => {
       setCurrentSortDirection(currentSortDirection === 'asc' ? 'desc' : 'asc');
       setFilteredData(filteredData.reverse());
     }
@@ -157,7 +157,7 @@ function Table() {
                   <option data-sort='size' value='size'>Size</option>
                   <option data-sort='uploadedBy' value='uploadedBy'>Uploaded by</option>
                 </select>
-                <IconButton onClick={()=> test()}>
+                <IconButton onClick={()=> flipSort()}>
                   { currentSortDirection === 'asc'
                     ? <ArrowUp/>
                     : <ArrowDown/>
