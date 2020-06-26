@@ -1,0 +1,16 @@
+.sh-masthead {
+
+    --sh-masthead-padding__horizontal: 32px;
+
+    background: var(--sh-global-color__black);
+    padding: var(--sh-global-padding__vertical) var(--sh-masthead-padding__horizontal);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--sh-global-color__accent);
+
+    @media only screen and (max-width: 600px) {
+        flex-direction: column;
+    }
+}

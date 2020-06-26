@@ -1,0 +1,84 @@
+.sh-clip-list {
+    border-radius: 16px;
+    &-item {
+        display: grid;
+        border: 1px solid #333533;
+        border-radius: 5px;
+        grid-template-columns: 200px auto 50px;
+        width: 99.8% !important; // because of the border
+        @media only screen and (max-width: 600px) {
+            grid-template-columns: 200px auto;
+        }
+
+        &__image img{
+            height: 100px;
+            border-radius: 5px;
+        }
+        &__details {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: var(--sh-global-color__white);
+            text-decoration: none;
+            > * { margin-bottom: 5px; }
+            &--title {
+                display: flex;
+                align-items: center;
+            }
+            &--views {
+                margin-left: 12px;
+            }
+        }
+        &__tools {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            @media only screen and (max-width: 600px) {
+                position: absolute;
+                top: 65px;
+                right: 0px
+            }
+        }
+        &:hover {
+            cursor: pointer;
+            border: 1px solid var(--sh-global-color__accent);
+        }
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .sh-clip-list {
+        border-radius: 16px;
+        &-item {
+            grid-template-columns: 90px auto;
+            &__details {
+                word-wrap: anywhere;
+                white-space: normal; 
+                margin-left: 5px;
+                > * { margin-bottom: 5px; }
+                &--title {
+                    align-items: flex-start;
+                }
+                &--views {
+                    margin-top: 3px;
+                    margin-right: 3px;
+                    margin-left: 5px;
+                }
+            }
+            &__image {
+                display: flex;
+                height: 100px;
+                align-items: center;
+                img{
+                    height: 50px;
+                    border-radius: 5px;
+                }
+            }
+            &__tools {
+                position: absolute;
+                top: 65px;
+                right: 0px
+            }
+        }
+    }
+}

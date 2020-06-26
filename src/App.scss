@@ -1,0 +1,24 @@
+:root {
+    --sh-global-color__black: #242423;
+    --sh-global-color__grey-100: #333533;
+    --sh-global-color__grey-200: #CFDBD5;
+    --sh-global-color__accent: #F5CB5C;
+    --sh-global-color__white: #e8eddf;
+    --sh-global-color__shadow: #4e4f4e;
+
+    --sh-a-light-color: var(--sh-global-color__white);
+    --sh-a-light-color__hover: var(--sh-global-color__grey-200);
+    --sh-a-light-color__focus: var(--sh-global-color__grey-200);
+    --sh-a-light-color__visited: var(--sh-global-color__grey-200);
+
+    --sh-a-dark-color: var(--sh-global-color__black);
+    --sh-a-dark-color__hover: var(--sh-global-color__grey-100);
+    --sh-a-dark-color__focus: var(--sh-global-color__grey-100);
+    --sh-a-dark-color__visited: var(--sh-global-color__grey-100);
+
+    --sh-button-color__active: #bfbfbf;
+
+    --sh-global-padding: 20px;
+    --sh-global-padding__horizontal: 32px;
+    --sh-global-padding__vertical: var(--sh-global-padding);
+}

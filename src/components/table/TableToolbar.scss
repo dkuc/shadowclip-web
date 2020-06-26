@@ -1,0 +1,18 @@
+.sh-toolbar {
+    padding: 12px;
+    border: 1px solid var(--sh-global-color__grey-100);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    .sh-button-icon { margin-left: 12px; }
+    input {
+        background: var(--sh-global-color__white);
+        border: 1px solid var(--sh-global-color__grey-100);
+        padding: 6px 12px;
+        font-size: 14px;
+        &:focus {
+            border-bottom: 2px solid var(--sh-global-color__accent);
+            margin-bottom: -1px;
+        }
+    }
+}
