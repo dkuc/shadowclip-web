@@ -40,7 +40,7 @@ const VideoPage: React.FC<VideoPlayerProps> = (props) => {
     useEffect(() => {
       if(!props.clip) {
         fetch(
-          "../shadowclipdata.json",
+          'https://shadowclip.net/videos/data',
           {
             method: "GET",
             headers: new Headers({

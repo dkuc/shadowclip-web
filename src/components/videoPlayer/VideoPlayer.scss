@@ -1,9 +1,7 @@
 @import "~video-react/styles/scss/video-react.scss";
 
 .sh-video-player {
-    margin-left: auto;
-    margin-top: 20px;
-    margin-right: auto;
+    margin: 20px auto;
     max-width: 70%;
     background: var(--sh-global-color__grey-100);
     box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.11);
