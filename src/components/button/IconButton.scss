@@ -4,12 +4,12 @@
     @if $variant == 'dark' {
         color: var(--sh-a-dark-color);
         &:hover { color: var(--sh-a-dark-color__hover); }
-        &:focus { color: var(--sh-a-dark-color__focus); }
+        &:focus, &:active { color: var(--sh-global-color__accent); }
     }
     @if $variant == 'light' {
         color: var(--sh-a-light-color);
         &:hover { color: var(--sh-a-light-color__hover); }
-        &:focus { color: var(--sh-a-light-color__focus); }
+        &:focus, &:active { color: var(--sh-global-color__accent); }
     }
 }
 

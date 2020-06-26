@@ -1,0 +1,13 @@
+.sh-toolbar {
+    padding: 12px;
+    border: 1px solid var(--sh-global-color__grey-100);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    &-item {
+        display: flex;
+        & + .sh-toolbar-item {
+            margin-left: 18px;
+        }
+    }
+}

@@ -1,12 +1,13 @@
 import React from 'react';
-import VideoPlayer from '../components/videoPlayer/VideoPlayer';
+import VideoPage from '../components/videoPlayer/VideoPage';
 import Main from '../components/main/Main';
 import Content from '../components/content/Content';
 import Breadcrumbs from '../components/breadcrumbs/Breadcrumbs';
 import BreadcrumbItem from '../components/breadcrumbs/BreadcrumbItem';
 
 interface ClipsPlayer {
-  match?: any
+  match: any,
+  location?: any
 };
 
 const ClipsPlayer: React.FC<ClipsPlayer> = (props) => {
@@ -18,7 +19,7 @@ const ClipsPlayer: React.FC<ClipsPlayer> = (props) => {
             <BreadcrumbItem isActive> {props.match.params.id} </BreadcrumbItem>
           </Breadcrumbs>
           <Content page='video-player'>
-            <VideoPlayer id={props.match.params.id}/>
+            <VideoPage clip={props.location.state} id={props.match.params.id} />
           </Content>
         </Main>
     );

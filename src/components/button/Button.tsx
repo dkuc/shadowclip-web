@@ -7,7 +7,8 @@ interface ButtonProps {
     children: any,
     variant?: 'light' | 'dark' | 'ghost',
     to?: string,
-    href?: string
+    href?: string,
+    onClick?: any
 };
 
 const Button: React.FC<ButtonProps> = (props) => {
@@ -22,9 +23,14 @@ const Button: React.FC<ButtonProps> = (props) => {
             </Link>
         }
         { props.href &&
-            <a href={props.href} className={`sh-button sh-button-${props.variant}`}>
+            <a href={props.href}className={`sh-button sh-button-${props.variant}`}>
                 { buttonContent }
             </a>
+        }
+        { props.onClick &&
+            <button onClick={props.onClick} className={`sh-button sh-button-link`}>
+                { buttonContent }
+            </button>
         }
         </React.Fragment>
     );

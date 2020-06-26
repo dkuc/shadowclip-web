@@ -3,8 +3,8 @@
     &-item {
         display: grid;
         border: 1px solid #333533;
-        border-radius: 5px;
-        grid-template-columns: 200px auto 50px;
+        border-radius: var(--sh-global-border-radius);
+        grid-template-columns: 200px auto min-content;
         width: 99.8% !important; // because of the border
         @media only screen and (max-width: 600px) {
             grid-template-columns: 200px auto;
@@ -12,7 +12,16 @@
 
         &__image img{
             height: 100px;
-            border-radius: 5px;
+            border-radius: var(--sh-global-border-radius);
+            color: var(--sh-global-color__white);
+            &:before {
+                content: ' ';
+                display: block;
+                position: absolute;
+                height: 100px;
+                width: 177px;
+                background: var(--sh-global-color__shadow);
+            }
         }
         &__details {
             display: flex;
@@ -32,7 +41,9 @@
         &__tools {
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-end;
+            margin-bottom: 12px;
+            margin-right: 6px;
             @media only screen and (max-width: 600px) {
                 position: absolute;
                 top: 65px;
@@ -48,7 +59,6 @@
 
 @media only screen and (max-width: 600px) {
     .sh-clip-list {
-        border-radius: 16px;
         &-item {
             grid-template-columns: 90px auto;
             &__details {
@@ -71,7 +81,6 @@
                 align-items: center;
                 img{
                     height: 50px;
-                    border-radius: 5px;
                 }
             }
             &__tools {
@@ -81,4 +90,8 @@
             }
         }
     }
+}
+
+.sh-toolbar-sort-wrapper {
+    align-items: flex-end;
 }

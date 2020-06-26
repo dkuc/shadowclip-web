@@ -32,3 +32,14 @@
 .sh-button-light { @include buttonVariants(light) }
 .sh-button-dark { @include buttonVariants(dark) }
 .sh-button-ghost { @include buttonVariants(ghost) }
+.sh-button-link {
+    border: none;
+    background: none;
+    color: var(--sh-global-color__white);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+    &:hover {
+        text-decoration: underline;
+    }
+}

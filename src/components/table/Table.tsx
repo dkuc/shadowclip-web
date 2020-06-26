@@ -8,11 +8,16 @@ import Spinner from '../spinner/Spinner';
 import Badge from '../badge/Badge';
 
 import './Table.scss';
-import './TableToolbar.scss';
 
-import { Share2, ArrowUp, ArrowDown } from 'react-feather';
+import { Share2, ArrowUp, ArrowDown, Trash } from 'react-feather';
 import IconButton from '../button/IconButton';
 import EmptyState from '../emptyState/EmptyState';
+import SearchBar from '../searchBar/SearchBar';
+import Select from '../select/Select';
+import SelectItem from '../select/SelectItem';
+import Dater from '../dater/Dater';
+import Toolbar from '../toolbar/Toolbar'
+import ToolbarItem from '../toolbar/ToolbarItem';
 
 interface rowProps {
   data: any
@@ -23,10 +28,11 @@ interface rowProps {
 function Table() {
 
     const [clipData, setClipData] = useState<any[]>([]);
+    // this copies ^ so we don't blow up the original
     const [filteredData, setFilteredData] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [currentSort, setCurrentSort] = useState('name');
     const [currentSortDirection, setCurrentSortDirection] = useState('desc');
+    const history = useHistory();
 
     const GUTTER_SIZE = 25;
     const ROW_HEIGHT = 100;
@@ -35,21 +41,23 @@ function Table() {
       let input = document.getElementById('sh-toolbar-search');
       // @ts-ignore
       let value = input.value.toUpperCase();
-
       setFilteredData(clipData.filter(item => item.name.toUpperCase().includes(value)));
     }
 
     const handleSort = (e: any) => {
       let sort = e.target.selectedIndex;
       let sortedValue = e.target.options[sort].dataset.sort;
-      setCurrentSort(sortedValue);
       setCurrentSortDirection('desc');
       setFilteredData(filteredData.sort(compareValues(sortedValue, 'desc')));
+      history.push(`/videos?sort_by=${sortedValue}.desc`);
     }
 
     const flipSort = () => {
-      setCurrentSortDirection(currentSortDirection === 'asc' ? 'desc' : 'asc');
+      const currentSort = history.location.search.split('.')[0];
+      const direction = currentSortDirection === 'asc' ? 'desc' : 'asc';
+      setCurrentSortDirection(direction);
       setFilteredData(filteredData.reverse());
+      history.push(`/videos${currentSort}.${direction}`);
     }
 
     function compareValues(key: any, order = 'asc') {
@@ -78,16 +86,11 @@ function Table() {
     
     const Row: React.FC<rowProps> = ({ index, style }) =>  {
 
-      const dateOptions = {
-        year: 'numeric', month: 'numeric', day: 'numeric',
-        hour: 'numeric', minute: 'numeric', second: 'numeric',
-        hour12: true,
-      };
-      const date = new Intl.DateTimeFormat('default', dateOptions).format(new Date(filteredData[index].date));
-
       const copyText = (url: string) => {
         navigator.clipboard.writeText(url).then(() => console.log(`Copied ${url}`));
       }
+
+      const current = filteredData[index];
 
       return(
         <div className='sh-clip-list-item' key={index} style={{
@@ -97,20 +100,23 @@ function Table() {
           width: style.width - GUTTER_SIZE
         }} >
           <section className='sh-clip-list-item__image'>
-            <Link to={`/videos/${ filteredData[index].fileName }`}>
-              <img alt='TODO alt text' src={`https://shadowclip.net/thumbnails/${filteredData[index].fileName}.jpg`}/>
+            <Link to={`/videos/${current.fileName }`}>
+              <img alt={`${current.name}`} src={`https://shadowclip.net/thumbnails/${current.fileName}.jpg`}/>
             </Link>
           </section>
-          <Link className='sh-clip-list-item__details' to={`/videos/${ filteredData[index].fileName }`}>
+          <Link className='sh-clip-list-item__details' to={{
+            pathname: `/videos/${current.fileName}`,
+            state: current}}>
             <h3 className='sh-clip-list-item__details--title'>
-              { filteredData[index].name }
-              <Badge className='sh-clip-list-item__details--views'>{ filteredData[index].views } { filteredData[index].views === 1 ? 'view' : 'views' }</Badge>
+              {current.name}
+              <Badge className='sh-clip-list-item__details--views'>{current.views} {current.views === 1 ? 'view' : 'views'}</Badge>
             </h3>
-            <span className='sh-clip-list-item__details--uploader'>Uploaded by <b>{ filteredData[index].uploadedBy }</b> on <b>{date}</b></span>
-            <span className='sh-clip-list-item__details--size'> File size: { bytes(filteredData[index].size) } </span>
+            <span className='sh-clip-list-item__details--uploader'>Uploaded by <b>{current.uploadedBy}</b> on <Dater isBold date={current.date}/></span>
+            <span className='sh-clip-list-item__details--size'> File size: { bytes(current.size) } </span>
           </Link>
           <section className='sh-clip-list-item__tools'>
-            <IconButton onClick={() => copyText(`${window.location.href}/${ filteredData[index].fileName }`)}><Share2/></IconButton>
+            { current.canDelete && <IconButton onClick={() => console.log('trash')}><Trash size={20}/></IconButton> }
+            <IconButton onClick={() => copyText(`${window.location.href}/${current.fileName}`)}><Share2 size={20}/></IconButton>
           </section>
         </div>
       )
@@ -126,44 +132,53 @@ function Table() {
           })
         }
       )
-        .then(res => res.json())
-        .then(response => {
-          setClipData(response);
-          setFilteredData(response);
-          setIsLoading(false);
-        })
-        .catch(error => console.log(error));
-  }, []);
+      .then(res => res.json())
+      .then(response => {
+        setClipData(response);
+        if(history.location.search) {
+          const filters = history.location.search.split('?sort_by=')[1].split('.');
+          setFilteredData(response.sort(compareValues(filters[0], filters[1])));
+        } else {
+          setFilteredData(response.sort(compareValues('date', 'desc')));
+          history.push(`/videos?sort_by=date.desc`);
+        }
+        setIsLoading(false);
+      })
+      .catch(error => console.log(error));
+  }, [ history ]);
+
+  let valueFromURL;
+  if(history.location.search) {
+    valueFromURL = history.location.search.split('?sort_by=')[1].split('.')[0];
+  } else {
+    valueFromURL = 'date'
+  };
 
   return (
     <React.Fragment>
       { isLoading
         ? <Spinner/>
         : <React.Fragment>
-            <div className='sh-toolbar'>
-              <input
-                type='text'
-                id='sh-toolbar-search'
-                className='sh-toolbar-search'
-                placeholder='Search for video'
-                onKeyUp={filterResults}/>
-                <select
-                  id='sh-toolbar-sort'
-                  className='sh-toolbar-sort'
-                  onChange={handleSort}>
-                  <option data-sort='name' value='name'>Name</option>
-                  <option data-sort='views' value='views'>Views</option>
-                  <option data-sort='date' value='date'>Date</option>
-                  <option data-sort='size' value='size'>Size</option>
-                  <option data-sort='uploadedBy' value='uploadedBy'>Uploaded by</option>
-                </select>
+            <Toolbar>
+              <ToolbarItem>
+                <SearchBar id='sh-toolbar-search' label='Search' placeHolder='Search for video' onChange={filterResults}/>
+              </ToolbarItem>
+              <ToolbarItem className='sh-toolbar-sort-wrapper'>
+                <Select id='sh-toolbar-sort' onChange={handleSort} defaultValue={valueFromURL} label='Sort by'>
+                  <SelectItem value='name'> Name </SelectItem>
+                  <SelectItem value='views'> Views </SelectItem>
+                  <SelectItem value='date'> Date </SelectItem>
+                  <SelectItem value='size'> Size </SelectItem>
+                  <SelectItem value='uploadedBy'> Uploaded by </SelectItem>
+                </Select>
                 <IconButton onClick={()=> flipSort()}>
                   { currentSortDirection === 'asc'
                     ? <ArrowUp/>
                     : <ArrowDown/>
                   }
                 </IconButton>
-            </div>
+              </ToolbarItem>
+            </Toolbar>
             { filteredData.length
               ? <List
                 className='sh-clip-list'

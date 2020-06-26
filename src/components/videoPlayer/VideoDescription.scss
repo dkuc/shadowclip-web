@@ -1,0 +1,18 @@
+.sh-video-player__toolbar {
+    color: var(--sh-global-color__white);
+    margin-top: 10px;
+    padding-top: 15px;
+    border-top: 2px solid var(--sh-global-color__accent);
+    display: grid;
+    grid-template-columns: auto max-content;
+    align-items: baseline;
+    &-title {
+        display: flex;
+        align-items: center;
+    }
+    &-uploaded, &-loadedFrom {
+        margin-top: 10px;
+        font-size: 14px;
+        font-weight: normal;
+    }
+}
