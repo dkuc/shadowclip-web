@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 // @ts-ignore
 import { FixedSizeList as List } from 'react-window';
@@ -10,7 +10,7 @@ import Badge from '../badge/Badge';
 import './Table.scss';
 import './TableToolbar.scss';
 
-import { Share2, Filter } from 'react-feather';
+import { Share2, ArrowUp, ArrowDown } from 'react-feather';
 import IconButton from '../button/IconButton';
 import EmptyState from '../emptyState/EmptyState';
 
@@ -25,6 +25,8 @@ function Table() {
     const [clipData, setClipData] = useState<any[]>([]);
     const [filteredData, setFilteredData] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [currentSort, setCurrentSort] = useState('name');
+    const [currentSortDirection, setCurrentSortDirection] = useState('desc');
 
     const GUTTER_SIZE = 25;
     const ROW_HEIGHT = 100;
@@ -32,10 +34,46 @@ function Table() {
     const filterResults = () => {
       let input = document.getElementById('sh-toolbar-search');
       // @ts-ignore
-      let value = input.value;
+      let value = input.value.toUpperCase();
 
-      setFilteredData(clipData.filter(item => item.name.includes(value)));
-      console.log(filteredData);
+      setFilteredData(clipData.filter(item => item.name.toUpperCase().includes(value)));
+    }
+
+    const handleSort = (e: any) => {
+      let sort = e.target.selectedIndex;
+      let sortedValue = e.target.options[sort].dataset.sort;
+      setCurrentSort(sortedValue);
+      setCurrentSortDirection('desc');
+      setFilteredData(filteredData.sort(compareValues(sortedValue, 'desc')));
+    }
+
+    const test = () => {
+      setCurrentSortDirection(currentSortDirection === 'asc' ? 'desc' : 'asc');
+      setFilteredData(filteredData.reverse());
+    }
+
+    function compareValues(key: any, order = 'asc') {
+      return function innerSort(a: any, b: any) {
+        if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
+          // property doesn't exist on either object
+          return 0;
+        }
+    
+        const varA = (typeof a[key] === 'string')
+          ? a[key].toUpperCase() : a[key];
+        const varB = (typeof b[key] === 'string')
+          ? b[key].toUpperCase() : b[key];
+    
+        let comparison = 0;
+        if (varA > varB) {
+          comparison = 1;
+        } else if (varA < varB) {
+          comparison = -1;
+        }
+        return (
+          (order === 'desc') ? (comparison * -1) : comparison
+        );
+      };
     }
     
     const Row: React.FC<rowProps> = ({ index, style }) =>  {
@@ -109,12 +147,27 @@ function Table() {
                 className='sh-toolbar-search'
                 placeholder='Search for video'
                 onKeyUp={filterResults}/>
-                <IconButton onClick={() => console.log('TODO')}><Filter/></IconButton>
+                <select
+                  id='sh-toolbar-sort'
+                  className='sh-toolbar-sort'
+                  onChange={handleSort}>
+                  <option data-sort='name' value='name'>Name</option>
+                  <option data-sort='views' value='views'>Views</option>
+                  <option data-sort='date' value='date'>Date</option>
+                  <option data-sort='size' value='size'>Size</option>
+                  <option data-sort='uploadedBy' value='uploadedBy'>Uploaded by</option>
+                </select>
+                <IconButton onClick={()=> test()}>
+                  { currentSortDirection === 'asc'
+                    ? <ArrowUp/>
+                    : <ArrowDown/>
+                  }
+                </IconButton>
             </div>
             { filteredData.length
               ? <List
                 className='sh-clip-list'
-                height={750}
+                height={700}
                 itemCount={filteredData.length}
                 itemSize={ROW_HEIGHT + GUTTER_SIZE}
                 width={'100%'}>
