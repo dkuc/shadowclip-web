@@ -1,0 +1,45 @@
+@mixin buttonVariants($theme) {
+    display: block;
+    border-radius: 2px;
+    text-align: center;
+    font-size: 14px;
+    padding: 10px 20px;
+    min-width: 150px;
+    transition: all 0.5s;
+    cursor: pointer;
+    text-decoration: none;
+
+    @if $theme == 'ghost' {
+        background: none;
+        border: 1px solid var(--sh-global-color__white);
+        color: var(--sh-global-color__white);
+        .sh-button__content { color: var(--sh-a-light-color); }
+    }
+    @if $theme == 'light' {
+        background: var(--sh-global-color__white);
+        color: var(--sh-global-color__black);
+        border: none;
+        .sh-button__content { color: var(--sh-a-dark-color); }
+    }
+    @if $theme == 'dark' {
+        background: var(--sh-global-color__black);
+        color: var(--sh-global-color__white);
+        border: none;
+        .sh-button__content { color: var(--sh-a-light-color); }
+    }
+}
+
+.sh-button-light { @include buttonVariants(light) }
+.sh-button-dark { @include buttonVariants(dark) }
+.sh-button-ghost { @include buttonVariants(ghost) }
+.sh-button-link {
+    border: none;
+    background: none;
+    color: var(--sh-global-color__white);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+    &:hover {
+        text-decoration: underline;
+    }
+}

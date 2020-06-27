@@ -1,0 +1,16 @@
+.sh-empty-state {
+    width: max-content;
+    margin-top: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    color: var(--sh-global-color__grey-200);
+    
+    .sh-empty-state__text {
+        font-size: 32px;
+        margin-top: 16px;
+    }
+}

@@ -1,0 +1,15 @@
+.sh-search-bar {
+    display: flex;
+    flex-direction: column;
+    &__input {
+        border-radius: var(--sh-global-border-radius);
+        background: var(--sh-global-color__white);
+        border: 1px solid var(--sh-global-color__grey-100);
+        padding: 6px 12px;
+        font-size: 14px;
+        &:focus {
+            border-bottom: 2px solid var(--sh-global-color__accent);
+            margin-bottom: -1px;
+        }
+    }
+}

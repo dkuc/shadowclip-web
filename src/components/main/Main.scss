@@ -1,0 +1,9 @@
+.sh-page {
+    background: var(--sh-global-color__black);
+    padding-top: 0;
+    &.sh-page-landing { background: unset; }
+}
+
+@media only screen and (max-width: 600px) {
+    .sh-page.sh-page-landing { background: var(--sh-global-color__black);}
+}

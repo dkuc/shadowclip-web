@@ -1,0 +1,34 @@
+.sh-logo {
+    height: 50px;
+    fill: var(--sh-global-color__white);
+    &-base { height: 50px; }
+    &-sm { height: 25px; }
+    &-md { height: 75px; }
+    &-lg { height: 100px; }
+
+    max-width: 100%;
+}
+
+.sh-logo-layered-wrapper {
+    position: relative;
+    max-width: 100%;
+    .sh-logo:first-of-type {
+        z-index: 2;
+        position: relative;
+    }
+    .sh-logo-layered {
+        position: absolute;
+        left: 4px;
+        top: 4px;
+        z-index: -1;
+        fill: var(--sh-global-color__shadow);
+
+        @media only screen and (max-width: 600px) {
+            z-index: 1;
+        }
+        
+        max-width: 100%;
+    }
+}
+
+

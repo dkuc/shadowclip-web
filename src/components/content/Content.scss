@@ -1,0 +1,6 @@
+.sh-content {
+    padding: var(--sh-global-padding__vertical) var(--sh-global-padding__horizontal);
+    @media only screen and (max-width: 600px) {
+        padding: 10px;
+    }
+}

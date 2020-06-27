@@ -1,0 +1,22 @@
+@mixin linkVariants($variant) {
+    border: none;
+    background: none;
+    @if $variant == 'dark' {
+        color: var(--sh-a-dark-color);
+        &:hover { color: var(--sh-a-dark-color__hover); }
+        &:focus, &:active { color: var(--sh-global-color__accent); }
+    }
+    @if $variant == 'light' {
+        color: var(--sh-a-light-color);
+        &:hover { color: var(--sh-a-light-color__hover); }
+        &:focus, &:active { color: var(--sh-global-color__accent); }
+    }
+}
+
+
+.sh-a-icon-light, .sh-button-icon-light { @include linkVariants(light) }
+.sh-a-icon-dark, .sh-button-icon-dark  { @include linkVariants(dark) }
+
+button.sh-button-icon {
+    cursor: pointer;
+}

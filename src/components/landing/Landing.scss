@@ -1,0 +1,28 @@
+.sh-landing-cta {
+    color: var(--sh-global-color__white);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+
+    h1 { 
+        width: min-content;
+        text-transform: uppercase;
+        font-size: 70px;
+    }
+    &__buton-wrapper {
+        margin-top: 10px;
+        padding-bottom: 10px;
+        display: flex;
+        .sh-button + .sh-button { margin-left: 10px; }
+        @media only screen and (max-width: 600px) {
+            flex-direction: column;
+            .sh-button + .sh-button {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
+    }
+    
+}

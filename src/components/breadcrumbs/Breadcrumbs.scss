@@ -1,0 +1,22 @@
+.sh-breadcrumbs {
+    background: var(--sh-global-color__grey-100);
+    color: var(--sh-global-color__grey-200);
+    border-bottom: 1px solid var(--sh-global-color__grey-100);
+    padding: 12px var(--sh-global-padding__horizontal);
+
+    display: flex;
+    align-items: center;
+
+    a {
+        color: var(--sh-global-color__grey-200);
+        text-decoration: none;
+        &:hover { text-decoration: underline; }
+    }
+    .sh-breadcrumbs-item__active {
+        color: var(--sh-global-color__white);
+        font-weight: 700;
+    }
+    svg {
+        height: 15px;
+    }
+}
