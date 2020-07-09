@@ -7,7 +7,7 @@ const HeroVideo: React.FC = () => {
         <React.Fragment>
             <div className='sh-video-overlay'/>
             <video playsInline autoPlay muted loop className='sh-video-hero'>
-                <source src="https://cloud.shadowclip.net/uploads/1112.mp4" type="video/mp4"/>
+                <source src="https://shadowclip.net/uploads/1112.mp4" type="video/mp4"/>
             </video>
         </React.Fragment>
     );
