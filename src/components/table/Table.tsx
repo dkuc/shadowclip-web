@@ -100,12 +100,12 @@ function Table() {
           width: style.width - GUTTER_SIZE
         }} >
           <section className='sh-clip-list-item__image'>
-            <Link to={`/videos/${current.fileName }`}>
+            <Link to={`/videos/${current.name }`}>
               <img alt={`${current.name}`} src={`https://shadowclip.net/thumbnails/${current.fileName}.jpg`}/>
             </Link>
           </section>
           <Link className='sh-clip-list-item__details' to={{
-            pathname: `/videos/${current.fileName}`,
+            pathname: `/videos/${current.name}`,
             state: current}}>
             <h3 className='sh-clip-list-item__details--title'>
               {current.name}
@@ -116,7 +116,7 @@ function Table() {
           </Link>
           <section className='sh-clip-list-item__tools'>
             { current.canDelete && <IconButton onClick={() => console.log('trash')}><Trash size={20}/></IconButton> }
-            <IconButton onClick={() => copyText(`${window.location.href}/${current.fileName}`)}><Share2 size={20}/></IconButton>
+            <IconButton onClick={() => copyText(`${window.location.href}/${current.name}`)}><Share2 size={20}/></IconButton>
           </section>
         </div>
       )
