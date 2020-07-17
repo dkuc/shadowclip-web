@@ -121,7 +121,10 @@ const VideoPage: React.FC<VideoPlayerProps> = (props) => {
         { isLoading
           ? <Spinner/>
           : <div className='sh-video-player'>
-              <Player src={ isMobile ? `https://${urlPrefix}shadowclip.net/mobile/${props.id}` :`https://${urlPrefix}shadowclip.net/uploads/${props.id}`}>
+              <Player src={ isMobile ? `https://${urlPrefix}shadowclip.net/mobile/${props.id}` :`https://${urlPrefix}shadowclip.net/uploads/${props.id}`}
+                      // @ts-ignore
+                      ref={player => { if(player) player.volume = 0.2 }}
+              >
                 <BigPlayButton position='center' />
                 <Shortcut shortcuts={ isMobile ? mobileShortCuts : shortCuts}/>
                 <ControlBar autoHide={false} className='sh-vidåeo-player__control'/>
