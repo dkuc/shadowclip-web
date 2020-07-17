@@ -14,6 +14,7 @@ interface VideoPlayerProps {
 
 interface clipDataProps {
   name?: string,
+  fileName?: string,
   views?: number,
   date?: string,
   uploadedBy?: string
@@ -33,7 +34,7 @@ const VideoPage: React.FC<VideoPlayerProps> = (props) => {
 
     const filterClipData = (data:any) => {
       // @ts-ignore
-      const filteredData = data.filter(item => item.fileName === props.id);
+      const filteredData = data.filter(item => item.name === props.id);
       setClipData(filteredData[0]);
     }
 
@@ -121,7 +122,7 @@ const VideoPage: React.FC<VideoPlayerProps> = (props) => {
         { isLoading
           ? <Spinner/>
           : <div className='sh-video-player'>
-              <Player src={ isMobile ? `https://${urlPrefix}shadowclip.net/mobile/${props.id}` :`https://${urlPrefix}shadowclip.net/uploads/${props.id}`}>
+              <Player src={ isMobile ? `https://${urlPrefix}shadowclip.net/mobile/${clipData.fileName}` :`https://${urlPrefix}shadowclip.net/uploads/${clipData.fileName}`}>
                 <BigPlayButton position='center' />
                 <Shortcut shortcuts={ isMobile ? mobileShortCuts : shortCuts}/>
                 <ControlBar autoHide={false} className='sh-vidåeo-player__control'/>
