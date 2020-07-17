@@ -10,7 +10,7 @@ import VideoDescription from './VideoDescription';
 interface VideoPlayerProps {
   clip?: any,
   id?: any
-};
+}
 
 interface clipDataProps {
   name?: string,
@@ -116,12 +116,15 @@ const VideoPage: React.FC<VideoPlayerProps> = (props) => {
 
   const urlPrefix = isCloudLoad ? 'cloud.' : '';
 
+
   return (
       <React.Fragment>
         { isLoading
           ? <Spinner/>
           : <div className='sh-video-player'>
-              <Player src={ isMobile ? `https://${urlPrefix}shadowclip.net/mobile/${props.id}` :`https://${urlPrefix}shadowclip.net/uploads/${props.id}`}>
+              <Player playsInline autoPlay
+                      src={isMobile ? `https://${urlPrefix}shadowclip.net/mobile/${props.id}` : `https://${urlPrefix}shadowclip.net/uploads/${props.id}`}
+              >
                 <BigPlayButton position='center' />
                 <Shortcut shortcuts={ isMobile ? mobileShortCuts : shortCuts}/>
                 <ControlBar autoHide={false} className='sh-vidåeo-player__control'/>
