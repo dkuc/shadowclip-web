@@ -25,6 +25,15 @@ interface rowProps {
   style?: any
 };
 
+//mutates the array passed in AND returns a new array to get around react caching
+function removeItem(array: any[],  item: any) {
+    const index = array.findIndex(i => i.name == item.name);
+    if (index > -1) {
+        array.splice(index, 1);
+    }
+    return [...array];
+}
+
 function Table() {
 
     const [clipData, setClipData] = useState<any[]>([]);
@@ -66,12 +75,12 @@ function Table() {
           // property doesn't exist on either object
           return 0;
         }
-    
+
         const varA = (typeof a[key] === 'string')
           ? a[key].toUpperCase() : a[key];
         const varB = (typeof b[key] === 'string')
           ? b[key].toUpperCase() : b[key];
-    
+
         let comparison = 0;
         if (varA > varB) {
           comparison = 1;
@@ -83,7 +92,7 @@ function Table() {
         );
       };
     }
-    
+
     const Row: React.FC<rowProps> = ({ index, style }) =>  {
 
       const copyText = (url: string) => {
@@ -115,7 +124,15 @@ function Table() {
             <span className='sh-clip-list-item__details--size'> File size: { bytes(current.size) } </span>
           </Link>
           <section className='sh-clip-list-item__tools'>
-            { current.canDelete && <IconButton onClick={() => console.log('trash')}><Trash size={20}/></IconButton> }
+            { current.canDelete && <IconButton onClick={() => {
+                //start a spinner?
+                fetch(`https://shadowclip.net/upload/delete/${current.fileName}`,
+                    {method: 'DELETE'}
+                ).then(() => {
+                    setClipData(removeItem(clipData, current))
+                    setFilteredData(removeItem(filteredData, current))
+                }).catch(err => console.error(err)); //throw up an error?
+            }}><Trash size={20}/></IconButton>}
             <IconButton onClick={() => copyText(`${window.location.href}/${current.name}`)}><Share2 size={20}/></IconButton>
           </section>
         </div>
