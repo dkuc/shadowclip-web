@@ -133,7 +133,7 @@ function Table() {
                     setFilteredData(removeItem(filteredData, current))
                 }).catch(err => console.error(err)); //throw up an error?
             }}><Trash size={20}/></IconButton>}
-            <IconButton onClick={() => copyText(`${window.location.href}/${current.name}`)}><Share2 size={20}/></IconButton>
+            <IconButton onClick={() => copyText(`${window.location.protocol}//${window.location.host}${window.location.pathname}/${current.name}`)}><Share2 size={20}/></IconButton>
           </section>
         </div>
       )
