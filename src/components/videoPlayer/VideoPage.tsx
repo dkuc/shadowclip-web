@@ -59,6 +59,8 @@ const VideoPage: React.FC<VideoPlayerProps> = (props) => {
         setClipData(props.clip);
         setIsLoading(false);
       }
+      fetch(`/api/watch/${props.id}`, {method: 'POST'}) // Increment the view count
+          .catch(err => console.error(err));
   }, []);
 
   const shortCuts = [
