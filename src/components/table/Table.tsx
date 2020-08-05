@@ -141,7 +141,7 @@ function Table() {
 
     useEffect(() => {
       fetch(
-        'https://shadowclip.net/videos/data',
+        'https://shadowclip.net/api/data',
         {
           method: "GET",
           headers: new Headers({
