@@ -11,7 +11,7 @@ const Landing: React.FC = () => {
             <HeroVideo/>
             <LogoLayered size='lg'/>
             <section className='sh-landing-cta__buton-wrapper'>
-                <Button to='/videos?sort_by=date.desc' variant='ghost'>Watch Clips</Button>
+                <Button to='/videos?sort_by=CREATED_AT.DESC' variant='ghost'>Watch Clips</Button>
                 <Button href='https://shadowclip.net/shadowclip/setup.exe' variant='light'>Download</Button>
             </section>
         </div>
