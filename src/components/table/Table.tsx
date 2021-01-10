@@ -47,6 +47,7 @@ const VIDEOS_QUERY = gql`
         totalCount
         edges {
           node {
+            id
             canDelete
             createdAt
             fileSize
@@ -60,6 +61,13 @@ const VIDEOS_QUERY = gql`
           endCursor
           hasNextPage
         }
+      }
+    }
+`;
+const DELETE_QUERY = gql`
+    mutation DeleteVideo($id: Int!) {
+      deleteVideo(input: {id: $id}) {
+        deletedVideoNodeId
       }
     }
 `;
@@ -84,7 +92,6 @@ function Table() {
         refetch({
             orderBy:`${currentSort}_${currentSortDirection}`,
             searchText
-
         })
     }, [currentSortDirection, currentSort, searchText]);
 
@@ -151,12 +158,13 @@ function Table() {
           <section className='sh-clip-list-item__tools'>
             { current.canDelete && <IconButton onClick={() => {
                 // start a spinner?
-                fetch(`https://shadowclip.net/uploads/delete/${current.fileIdentifier}`,
-                    {method: 'DELETE'}
-                ).then(() => {
-                    //setClipData(removeItem(clipData, current))
-                    //setFilteredData(removeItem(filteredData, current))
-                }).catch(err => console.error(err)); //throw up an error?
+                client.mutate({mutation: DELETE_QUERY, variables: {id: current.id}})
+                    .then(() => {
+                        refetch({
+                            orderBy: `${currentSort}_${currentSortDirection}`,
+                            searchText
+                        })
+                    }).catch(err => console.error(err)); //throw up an error?
             }}><Trash size={20}/></IconButton>}
             <IconButton onClick={() => copyText(`${window.location.protocol}//${window.location.host}${window.location.pathname}/${current.title}`)}><Share2 size={20}/></IconButton>
           </section>
