@@ -152,7 +152,7 @@ function Table() {
               {current.title}
               <Badge className='sh-clip-list-item__details--views'>{current.views} {current.views === 1 ? 'view' : 'views'}</Badge>
             </h3>
-            <span className='sh-clip-list-item__details--uploader'>Uploaded by <b>{current.userHash}</b> on <Dater isBold date={current.createdAt}/></span>
+            <span className='sh-clip-list-item__details--uploader'>Uploaded by <b>{current.userHash}</b> on <Dater isBold createdAt={current.createdAt}/></span>
             <span className='sh-clip-list-item__details--size'> File size: { bytes(current.fileSize) } </span>
           </Link>
           <section className='sh-clip-list-item__tools'>

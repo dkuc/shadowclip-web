@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface DaterProps {
-    date: any,
+    createdAt: any,
     isBold?: boolean
 };
 
@@ -12,8 +12,8 @@ const Dater: React.FC<DaterProps> = (props) => {
         hour: 'numeric', minute: 'numeric', second: 'numeric',
         hour12: true,
       };
-    
-    const formattedDate = new Intl.DateTimeFormat('default', dateOptions).format(new Date(props.date));
+
+    const formattedDate = new Intl.DateTimeFormat('default', dateOptions).format(new Date(props.createdAt));
 
     return (
         <React.Fragment>

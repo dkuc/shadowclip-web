@@ -9,10 +9,10 @@ import Separator from '../separator/Separator';
 
 interface VideoDescriptionProps {
     video: {
-        name?: string,
+        title?: string,
         views?: number,
-        date?: string,
-        uploadedBy?: string
+        createdAt?: string,
+        userHash?: string
     }
     onQualitySwitch?: any,
     loadedFrom?: string,
@@ -24,10 +24,10 @@ const VideoDescription: React.FC<VideoDescriptionProps> = (props) => {
         <div className='sh-video-player__toolbar'>
             <div className='sh-video-player__toolbar-details'>
                 <h1 className='sh-video-player__toolbar-title'>
-                    {props.video.name}
+                    {props.video.title}
                     <Badge className='sh-clip-list-item__details--views'>{props.video.views} {props.video.views === 1 ? 'view' : 'views'}</Badge>
                 </h1>
-                <h3 className='sh-video-player__toolbar-uploaded'>Uploaded by {props.video.uploadedBy} on <Dater date={props.video.date}/></h3>
+                <h3 className='sh-video-player__toolbar-uploaded'>Uploaded by {props.video.userHash} on <Dater createdAt={props.video.createdAt}/></h3>
                 <h3 className='sh-video-player__toolbar-loadedFrom'>
                     Loaded {props.loadedFrom === 'cloud' ? 'from cloud' : 'directly'}
                     <Separator/>

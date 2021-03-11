@@ -6,6 +6,7 @@ import Spinner from '../spinner/Spinner';
 // @ts-ignore
 import { Player, BigPlayButton, ControlBar, Shortcut } from 'video-react';
 import VideoDescription from './VideoDescription';
+import {ApolloClient, gql, InMemoryCache} from "@apollo/client";
 
 interface VideoPlayerProps {
   clip?: any,
@@ -14,11 +15,33 @@ interface VideoPlayerProps {
 
 interface clipDataProps {
   name?: string,
-  fileName?: string,
+  videoUrl?: string,
+  mobileUrl?: string,
   views?: number,
   date?: string,
   uploadedBy?: string
 }
+
+const client = new ApolloClient({
+  uri: 'https://beta.shadowclip.net/graphql',
+  cache: new InMemoryCache()
+});
+const VIDEO_QUERY = gql`
+  query GetSingleVideo($title: String!) {
+    videoByTitle(title: $title) {
+      id
+      canDelete
+      createdAt
+      fileSize
+      thumbnailUrl
+      title
+      userHash
+      views
+      videoUrl
+      mobileUrl
+    }
+  }
+`;
 
 const VideoPage: React.FC<VideoPlayerProps> = (props) => {
 
@@ -39,35 +62,19 @@ const VideoPage: React.FC<VideoPlayerProps> = (props) => {
     }
 
     useEffect(() => {
-      if(!props.clip) {
-        fetch(
-          'https://shadowclip.net/api/data',
-          {
-            method: "GET",
-            headers: new Headers({
-              Accept: "application/json"
-            })
-          }
-        )
-        .then(res => res.json())
-        .then(response => {
-          filterClipData(response);
-          setIsLoading(false);
-        })
-        .catch(error => console.log(error));
-      } else {
-        setClipData(props.clip);
+      client.query({query:VIDEO_QUERY,variables:{title:props.id}})
+      .then(res => {
+        const videoData = res.data.videoByTitle;
+        setClipData(videoData);
         setIsLoading(false);
-      }
-      fetch(`/api/watch/${props.id}`, {method: 'POST'}) // Increment the view count
-          .catch(err => console.error(err));
+      })
+      .catch(error => console.log(error));
   }, []);
 
   const shortCuts = [
     {
       keyCode: 39, // Right arrow
       handle: (player: any, actions: any) => {
-        console.log(player);
         const operation = {
           action: 'forward-1',
           source: 'shortcut'
@@ -79,7 +86,6 @@ const VideoPage: React.FC<VideoPlayerProps> = (props) => {
     {
       keyCode: 37, // left arrow
       handle: (player: any, actions: any) => {
-        console.log(player);
         const operation = {
           action: 'replay-1', // backwards being called replay is dumb
           source: 'shortcut'
@@ -94,7 +100,6 @@ const VideoPage: React.FC<VideoPlayerProps> = (props) => {
     {
       keyCode: 39, // Right arrow
       handle: (player: any, actions: any) => {
-        console.log(player);
         const operation = {
           action: 'forward-1',
           source: 'shortcut'
@@ -106,7 +111,6 @@ const VideoPage: React.FC<VideoPlayerProps> = (props) => {
     {
       keyCode: 37, // left arrow
       handle: (player: any, actions: any) => {
-        console.log(player);
         const operation = {
           action: 'replay-1', // backwards being called replay is dumb
           source: 'shortcut'
@@ -118,14 +122,13 @@ const VideoPage: React.FC<VideoPlayerProps> = (props) => {
   ];
 
   const urlPrefix = isCloudLoad ? 'cloud.' : '';
-
   return (
       <React.Fragment>
         { isLoading
           ? <Spinner/>
           : <div className='sh-video-player'>
               <Player playsInline autoPlay
-                      src={isMobile ? `https://${urlPrefix}shadowclip.net/mobile/${clipData.fileName}` : `https://${urlPrefix}shadowclip.net/uploads/${clipData.fileName}`}
+                      src={isMobile ? clipData.mobileUrl : clipData.videoUrl}
                       // @ts-ignore
                       ref={player => {if (player) player.volume = 0.2}}
               >
