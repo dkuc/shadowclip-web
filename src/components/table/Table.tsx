@@ -4,6 +4,7 @@ import {ApolloClient, gql, InMemoryCache, useQuery} from '@apollo/client';
 
 // @ts-ignore
 import {FixedSizeList as List} from 'react-window';
+import InfiniteLoader from "react-window-infinite-loader";
 import bytes from 'bytes';
 import Spinner from '../spinner/Spinner';
 import Badge from '../badge/Badge';
@@ -19,7 +20,7 @@ import SelectItem from '../select/SelectItem';
 import Dater from '../dater/Dater';
 import Toolbar from '../toolbar/Toolbar'
 import ToolbarItem from '../toolbar/ToolbarItem';
-import {relayStylePagination} from "@apollo/client/utilities";
+import {offsetLimitPagination} from "@apollo/client/utilities";
 
 const client = new ApolloClient({
     uri: 'https://beta.shadowclip.net/graphql',
@@ -27,7 +28,7 @@ const client = new ApolloClient({
         typePolicies: {
             Query: {
                 fields: {
-                    videos: relayStylePagination(),
+                    videosList: offsetLimitPagination(),
                 },
             },
         },
@@ -42,25 +43,28 @@ interface rowProps {
 
 
 const VIDEOS_QUERY = gql`
-    query GetVideos($orderBy: [VideosOrderBy!] = CREATED_AT_DESC, $searchText: String) {
-      videos(orderBy: $orderBy,  searchText: $searchText, first: 10) {
+    query GetVideos(
+      $orderBy: [VideosOrderBy!] = CREATED_AT_DESC
+      $searchText: String
+      $offset: Int!
+    ) {
+      videosList(
+        orderBy: $orderBy
+        searchText: $searchText
+        first: 10
+        offset: $offset
+      ) {
+        id
+        canDelete
+        createdAt
+        fileSize
+        thumbnailUrl
+        title
+        userHash
+        views
+      }
+      videos {
         totalCount
-        edges {
-          node {
-            id
-            canDelete
-            createdAt
-            fileSize
-            thumbnailUrl
-            title
-            userHash
-            views
-          }
-        }
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
       }
     }
 `;
@@ -77,27 +81,30 @@ function Table() {
     const [searchText, setSearchText] = useState();
     const variables = {
         orderBy:`${currentSort}_${currentSortDirection}`,
+        offset: 0,
         searchText
     };
     const {
         data,
         loading:isLoading,
-        //fetchMore, need to call this when the user scrolls to the end of the list
+        fetchMore,
         refetch
     } = useQuery(VIDEOS_QUERY, {
         client,
         variables
     });
     useEffect(() => {
-        refetch({
+        if(isLoading) return //If the initial load is still going, do not refresh a 2nd time
+        client.resetStore().then(()=>refetch({
             orderBy:`${currentSort}_${currentSortDirection}`,
+            offset: 0,
             searchText
-        })
+        }));
     }, [currentSortDirection, currentSort, searchText]);
 
-    // @ts-ignore
-    const filteredData = data ? data.videos.edges.map(edge => edge.node) : [];
 
+    const filteredData = data ? data.videosList : [];
+    const loadedItemCount = filteredData.length;
 
     const history = useHistory();
 
@@ -131,6 +138,11 @@ function Table() {
         navigator.clipboard.writeText(url).then(() => console.log(`Copied ${url}`));
       }
 
+      if(!isItemLoaded(index)){
+          return (
+              <div> </div>
+          )
+      }
       const current = filteredData[index];
 
       return(
@@ -180,7 +192,15 @@ function Table() {
     valueFromURL = 'CREATED_AT'
   }
 
-  return (
+    function isItemLoaded(index: number) {
+        return index < loadedItemCount;
+    }
+
+    function loadMoreItems(startIndex: number, stopIndex: number) {
+      return fetchMore({variables: {offset: loadedItemCount}})
+    }
+
+    return (
     <React.Fragment>
       { isLoading
         ? <Spinner/>
@@ -205,16 +225,27 @@ function Table() {
                 </IconButton>
               </ToolbarItem>
             </Toolbar>
-            { filteredData.length
-              ? <List
-                className='sh-clip-list'
-                height={700}
-                itemCount={filteredData.length}
-                itemSize={ROW_HEIGHT + GUTTER_SIZE}
-                width={'100%'}>
-                {Row}
-              </List>
-              : <EmptyState/>
+            { loadedItemCount
+                ? <InfiniteLoader
+                    isItemLoaded={isItemLoaded}
+                    itemCount={loadedItemCount + 1}
+                    loadMoreItems={loadMoreItems}
+                    threshold={1}
+                >
+                    {({onItemsRendered, ref}) => (
+                        <List
+                            className='sh-clip-list'
+                            height={700}
+                            itemCount={loadedItemCount + 1}
+                            itemSize={ROW_HEIGHT + GUTTER_SIZE}
+                            onItemsRendered={onItemsRendered}
+                            ref={ref}
+                            width={'100%'}>
+                            {Row}
+                        </List>
+                    )}
+                </InfiniteLoader>
+                : <EmptyState/>
             }
       </React.Fragment>
       }
