@@ -24,7 +24,7 @@ const VideoPage: React.FC<VideoPlayerProps> = (props) => {
 
     const [ isLoading, setIsLoading ] = useState(true);
     const [ isMobile, setIsMobile ] = useState(false);
-    const [ isCloudLoad, setIsCloudLoad ] = useState(false);
+    const [ isCloudLoad, setIsCloudLoad ] = useState(true);
     const [ clipData, setClipData ] = useState<clipDataProps>({
       name: 'Loading',
       views: 0,
