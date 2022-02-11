@@ -15,7 +15,7 @@
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.6",
     "bytes": "^3.1.0",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-feather": "^2.0.9",
